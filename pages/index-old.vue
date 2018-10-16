@@ -34,8 +34,7 @@ export default {
 
 <style>
 .container {
-  width: 1140px;
-  margin: auto;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
