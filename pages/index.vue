@@ -5,41 +5,29 @@
       <h1 class="title">
         bulb
       </h1>
-      <h2 class="subtitle">
-        Nuxt.js project!
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
+      <to-do/>
     </div>
   </section>
 </template>
 
 <script>
+import Vue from 'vue'
+import ToDo from '~/components/ToDo.vue'
 import AppLogo from '~/components/AppLogo.vue'
 
 export default {
   components: {
+    ToDo,
     AppLogo
   }
 }
+
 </script>
 
 <style>
 .container {
   width: 1140px;
   margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
 .title {
@@ -61,5 +49,13 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+.add_room{
+  display: inline-block;
+  margin-top: 15px;
+  padding: 5px 15px;
+  border: 1px solid green;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
