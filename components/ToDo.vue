@@ -1,5 +1,18 @@
 <template>
   <div id="todo-list-example">
+    <div class="add-room" v-on:click="addNewRoom">
+    Добавить комнату
+  </div>
+  <ul>
+    <li class=""
+      v-for="(item) in rooms"
+      v-bind:key="item.id"
+      v-bind:class="item.addClass">
+      <span>
+        {{ item.id }}
+      </span>
+      </li>
+  </ul>
     <form class="form-bulb" v-on:submit.prevent="addNewTodo">
       <div class="form-item">
         <label for="new-room">команата</label>
@@ -74,10 +87,11 @@ export default {
       newDate: '',
       newPosition: '',
       newGaranty: '',
-      todos: [
-
-      ],
-      nextTodoId: 1
+      todos: [ ],
+      nextTodoId: 1,
+      rooms: [],
+      nextItemId: 1,
+      showRoomClass: 'item-room show'
     }
 
   },
@@ -109,6 +123,14 @@ export default {
     saveTodos() {
       const parsed = JSON.stringify(this.todos);
       localStorage.setItem('todos', parsed);
+    },
+    addNewRoom: function () {
+      this.rooms.push({
+        id: this.nextItemId++,
+        addClass: this.showRoomClass
+      })
+      //this.saveTodos();
+      //this.newRoom = ''
     }
   }
 }
@@ -146,5 +168,18 @@ a {
 .item span{
   display: block;
   text-align: left;
+}
+.add-room{
+  display: inline-block;
+  padding: 5px 15px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  border: 1px solid red;
+  cursor: pointer;
+}
+.item-room{
+  width: 100px;
+  height: 100px;
+  background-color: grey;
 }
 </style>
