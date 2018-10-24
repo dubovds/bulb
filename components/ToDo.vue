@@ -1,6 +1,7 @@
 
 <template>
   <div id="bulb-section">
+    <!-- <form class="form-bulb"> -->
     <form class="form-bulb" v-on:submit.prevent="addNewBulb">
       <div class="form-item">
         <label for="new-room">команата</label>
@@ -39,19 +40,7 @@
     </form>
 
     <div class="content-section">
-      <ul>
-        <li class=""
-          v-for="(todo) in todos"
-          v-bind:key="todo.id"
-          v-bind:class="todo.addClass">
-          <span>
-            {{ todo.id }}
-          </span>
-          <span>
-            {{ todo.titleRoom }}
-          </span>
-          </li>
-      </ul>
+
 <!--  Kitchen-->
       <table>
         <tr>
@@ -78,7 +67,7 @@
               {{ todo.titleGaranty }}
           </td>
           <td>
-            <button v-on:click="removeArrayKitchen()">Удалить</button>
+            <button v-on:click="removeKitchen()">Удалить</button>
           </td>
         </tr>
       </table>
@@ -108,7 +97,7 @@
               {{ todo.titleGaranty }}
           </td>
           <td>
-            <button v-on:click="removeTodo()">Удалить</button>
+            <button v-on:click="removeGuest()">Удалить</button>
           </td>
         </tr>
       </table>
@@ -138,7 +127,7 @@
               {{ todo.titleGaranty }}
           </td>
           <td>
-            <button v-on:click="removeTodo()">Удалить</button>
+            <button v-on:click="removeBedroom()">Удалить</button>
           </td>
         </tr>
       </table>
@@ -171,24 +160,24 @@ export default {
   name: 'ToDo',
   data () {
     return {
+      arrayKitchen: [],
+      arrayGuest: [],
+      arrayBedroom: [],
       selected: '',
       newRoom: '',
       newDate: '',
       newPosition: '',
       newGaranty: '',
-      todos: [ ],
       nextIdKitchen: 1,
       nextIdGuest: 1,
       nextIdBedroom: 1,
-      showRoom: false,
-      rooms: [],
-      arrayKitchen: [],
-      arrayGuest: [],
-      arrayBedroom: [],
-      nextItemId: 1,
-      showRoomClass: 'item-room show',
-      newRoomName: '',
       itemBulb: 'item-bulb'
+      //newRoomName: '',
+      //todos: [ ],
+      //showRoom: false,
+      //rooms: [],
+      //nextItemId: 1,
+      //showRoomClass: 'item-room show',
     }
   },
   mounted() {
@@ -198,13 +187,15 @@ export default {
       } catch(e) {
         localStorage.removeItem('arrayKitchen');
       }
-    } else if (localStorage.getItem('arrayGuest')) {
+    };
+    if (localStorage.getItem('arrayGuest')) {
       try {
         this.arrayGuest = JSON.parse(localStorage.getItem('arrayGuest'));
       } catch(e) {
         localStorage.removeItem('arrayGuest');
       }
-    } else if (localStorage.getItem('arrayBedroom')) {
+    };
+    if (localStorage.getItem('arrayBedroom')) {
       try {
         this.arrayBedroom = JSON.parse(localStorage.getItem('arrayBedroom'));
       } catch(e) {
@@ -222,7 +213,12 @@ export default {
           titlePosition: this.newPosition,
           titleDate: this.newDate,
           titleGaranty: this.newGaranty
-        })
+        }),
+        this.newRoom = '',
+        this.newPosition = '',
+        this.newDate = '',
+        this.newGaranty = '',
+        this.saveArrayKitchen();
       } else if (this.selected === 'Зал'){
         this.arrayGuest.push({
           itemBulb: this.itemBulb,
@@ -231,7 +227,12 @@ export default {
           titlePosition: this.newPosition,
           titleDate: this.newDate,
           titleGaranty: this.newGaranty
-        })
+        }),
+        this.newRoom = '',
+        this.newPosition = '',
+        this.newDate = '',
+        this.newGaranty = '',
+        this.saveArrayGuest();
       } else if (this.selected === 'Спальня'){
         this.arrayBedroom.push({
           itemBulb: this.itemBulb,
@@ -240,20 +241,25 @@ export default {
           titlePosition: this.newPosition,
           titleDate: this.newDate,
           titleGaranty: this.newGaranty
-        })
+        }),
+        this.newRoom = '',
+        this.newPosition = '',
+        this.newDate = '',
+        this.newGaranty = '',
+        this.saveArrayBedroom();
       }
-      this.saveArrayGuest();
-      this.saveArrayKitchen();
-
-      //this.newRoom = ''
     },
-    removeArrayKitchen(x) {
+    removeKitchen(x) {
       this.arrayKitchen.splice(x, 1);
       this.saveArrayKitchen();
     },
-    removeArrayGuest(x) {
+    removeGuest(x) {
       this.arrayGuest.splice(x, 1);
       this.saveArrayGuest();
+    },
+    removeBedroom(x) {
+      this.arrayBedroom.splice(x, 1);
+      this.saveArrayBedroom();
     },
     saveArrayKitchen() {
       const parsed = JSON.stringify(this.arrayKitchen);
@@ -262,7 +268,12 @@ export default {
     saveArrayGuest() {
       const parsed = JSON.stringify(this.arrayGuest);
       localStorage.setItem('arrayGuest', parsed);
+    },
+    saveArrayBedroom() {
+      const parsed = JSON.stringify(this.arrayBedroom);
+      localStorage.setItem('arrayBedroom', parsed);
     }
+
   }
 }
 </script>
