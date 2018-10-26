@@ -51,8 +51,8 @@
           <th></th>
         </tr>
         <tr v-for="(todo) in arrayKitchen"
-        v-bind:key="todo.id"
-        v-bind:title="todo.titleRoom" class="kitchen">
+            v-bind:key="todo.id"
+            v-bind:title="todo.titleRoom" class="kitchen">
           <td>
             {{ todo.id }}
               Кухня
@@ -157,7 +157,6 @@
 
 <script>
 export default {
-  name: 'ToDo',
   data () {
     return {
       arrayKitchen: [],
@@ -218,6 +217,7 @@ export default {
         this.newPosition = '',
         this.newDate = '',
         this.newGaranty = '',
+        this.selected = '',
         this.saveArrayKitchen();
       } else if (this.selected === 'Зал'){
         this.arrayGuest.push({
