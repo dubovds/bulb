@@ -1,166 +1,108 @@
 <template>
-  <section class="container">
+  <section class="container" id="app">
     <div class="top">
-      <div class="logo-title">
-        <app-logo/>
-        <h1 class="title">
-          bulb
-        </h1>
-      </div>
-      <div class="rooms-section">
-        <div class="item-room" id="kitchen">
-          <div class=""
-          v-for="(todo) in arrayKitchen"
-          v-bind:key="todo.id"
-          v-bind:class="todo.itemBulb"></div>
-          <span class="item-room__title">Кухня</span>
+      <h1 class="title">
+        Accounting light bulbs in the house
+      </h1>
+      <div class="room__section">
+        <div class="add-room__input-section">
+          <input type="text" class="form-control" v-model='newRoom' placeholder="Enter your room">
+          <button type="button" class="btn btn-success" name="button" @click='addRoom'>+</button>
+        </div>
+        <div class="add-room__list-section">
+          <div class="item-room"
+               v-for="(room, x) in rooms"
+               v-bind:key="room.id">
 
+               <div class="" v-for="bulb in bulbs" v-bind:key="bulb.id"
+                             v-if="bulb.roomId == room.id"
+                             v-bind:class="itemBulb">
+               </div>
+
+            <span class="item-room__title">{{ room.label }}</span>
+            <button class="btn btn-danger item-room__button" v-on:click="removeRoom(x)">-</button>
+          </div>
         </div>
-        <div class="item-room" id="guest">
-          <div class=""
-          v-for="(todo) in arrayGuest"
-          v-bind:key="todo.id"
-          v-bind:class="todo.itemBulb"></div>
-          <span class="item-room__title">Зал</span>
-        </div>
-        <div class="item-room" id="bedroom">
-          <div class=""
-          v-for="(todo) in arrayBedroom"
-          v-bind:key="todo.id"
-          v-bind:class="todo.itemBulb"></div>
-          <span class="item-room__title">Спальня</span>
-        </div>
+      </div>
+
+      <div class="rooms-section">
+
       </div>
     </div>
       <div id="bulb-section">
         <!-- <form class="form-bulb"> -->
-        <form class="form-bulb" v-on:submit.prevent="addNewBulb">
+        <form class="form-bulb"
+              v-on:submit.prevent="addBulb"
+              v-show="hasRooms">
           <div class="form-item">
-            <label for="new-room">команата</label>
-            <select v-model="selected">
-              <option disabled value="Выберите комнату">Выберите комнату</option>
-              <option>Кухня</option>
-              <option>Зал</option>
-              <option>Спальня</option>
+            <label for="new-room">Select room</label>
+            <select class="form-control" v-model='selected'>
+              <option disabled value="Выберите комнату">Select room</option>
+              <option v-for='room in rooms'
+                      v-bind:value= 'room.id'
+                      v-bind:key= 'room.key'>
+                          {{ room.label }}
+              </option>
             </select>
           </div>
           <div class="form-item">
-            <label for="new-position">расположение лампочки</label>
-            <input
+            <label for="new-position">Position of bulb</label>
+            <input class="form-control"
               v-model="newPosition"
               id="new-position"
-              placeholder="В правом углу"
+              placeholder="Left corner"
             >
           </div>
           <div class="form-item">
-            <label for="new-date">дата установки</label>
-            <input
+            <label for="new-date">Installation date</label>
+            <input class="form-control"
               v-model="newDate"
               id="new-date"
               placeholder="12.10.2018"
             >
           </div>
           <div class="form-item">
-            <label for="new-garanty">гарантия до</label>
-            <input
+            <label for="new-garanty">Warranty up to</label>
+            <input class="form-control"
               v-model="newGaranty"
               id="new-garanty"
               placeholder="10.2019"
             >
           </div>
-          <button>Добавить</button>
+          <button class="btn btn-success">Add the bulb</button>
         </form>
 
         <div class="content-section">
 
-    <!--  Kitchen-->
-          <table>
+          <table v-show="hasRooms">
             <tr>
-              <th>команата</th>
-              <th>расположение лампочки</th>
-              <th>дата установки</th>
-              <th>гарантия до</th>
+              <th>Room</th>
+              <th>Position of balb</th>
+              <th>Installation date</th>
+              <th>Warranty up to</th>
               <th></th>
             </tr>
-            <tr v-for="(todo) in arrayKitchen"
-                v-bind:key="todo.id"
-                v-bind:title="todo.titleRoom" class="kitchen">
+            <tr v-for="bulb in bulbs"
+                v-bind:key="bulb.id"
+                v-bind:title="bulb.titleRoom"
+                v-bind:class="bulb.titleRoom">
               <td>
-                  Кухня
+                  {{bulb.titleRoom}}
               </td>
               <td>
-                  {{ todo.titlePosition }}
+                  {{ bulb.titlePosition }}
               </td>
               <td>
-                  {{ todo.titleDate }}
+                  {{ bulb.titleDate }}
               </td>
               <td>
-                  {{ todo.titleGaranty }}
+                  {{ bulb.titleGaranty }}
               </td>
               <td>
-                <button v-on:click="removeKitchen()">Удалить</button>
+                <button class="btn btn-danger" v-on:click="removeBulb()">-</button>
               </td>
             </tr>
           </table>
-    <!--  Guest -->
-          <table style="color: red">
-            <tr>
-              <th>команата</th>
-              <th>расположение лампочки</th>
-              <th>дата установки</th>
-              <th>гарантия до</th>
-              <th></th>
-            </tr>
-            <tr v-for="(todo) in arrayGuest"
-            v-bind:key="todo.id"
-            v-bind:title="todo.titleRoom" class="guest">
-              <td>
-                  Зал
-              </td>
-              <td>
-                  {{ todo.titlePosition }}
-              </td>
-              <td>
-                  {{ todo.titleDate }}
-              </td>
-              <td>
-                  {{ todo.titleGaranty }}
-              </td>
-              <td>
-                <button v-on:click="removeGuest()">Удалить</button>
-              </td>
-            </tr>
-          </table>
-    <!--  Bedroom-->
-          <table style="color: green">
-            <tr>
-              <th>команата</th>
-              <th>расположение лампочки</th>
-              <th>дата установки</th>
-              <th>гарантия до</th>
-              <th></th>
-            </tr>
-            <tr v-for="(todo) in arrayBedroom"
-            v-bind:key="todo.id"
-            v-bind:title="todo.titleRoom" class="bedroom">
-              <td>
-                  Спальня
-              </td>
-              <td>
-                  {{ todo.titlePosition }}
-              </td>
-              <td>
-                  {{ todo.titleDate }}
-              </td>
-              <td>
-                  {{ todo.titleGaranty }}
-              </td>
-              <td>
-                <button v-on:click="removeBedroom()">Удалить</button>
-              </td>
-            </tr>
-          </table>
-
         </div>
       </div>
   </section>
@@ -168,129 +110,93 @@
 
 <script>
 import Vue from 'vue'
-import ToDo from '~/components/ToDo.vue'
 import AppLogo from '~/components/AppLogo.vue'
 
 export default {
   components: {
-    ToDo,
     AppLogo
   },
   data () {
     return {
-      arrayKitchen: [],
-      arrayGuest: [],
-      arrayBedroom: [],
+      rooms: [],
+      bulbs: [],
       selected: '',
       newRoom: '',
       newDate: '',
+      roomId: '',
       newPosition: '',
       newGaranty: '',
-      nextIdKitchen: 1,
-      nextIdGuest: 1,
-      nextIdBedroom: 1,
+      nextIdRoom: 1,
+      nextIdBulb: 1,
       itemBulb: 'item-bulb'
-      //newRoomName: '',
-      //todos: [ ],
-      //showRoom: false,
-      //rooms: [],
-      //nextItemId: 1,
-      //showRoomClass: 'item-room show',
     }
   },
   mounted() {
-    if (localStorage.getItem('arrayKitchen')) {
+    if (localStorage.getItem('rooms')) {
       try {
-        this.arrayKitchen = JSON.parse(localStorage.getItem('arrayKitchen'));
+        this.rooms = JSON.parse(localStorage.getItem('rooms'));
       } catch(e) {
-        localStorage.removeItem('arrayKitchen');
+        localStorage.removeItem('rooms');
       }
     };
-    if (localStorage.getItem('arrayGuest')) {
+    if (localStorage.getItem('bulbs')) {
       try {
-        this.arrayGuest = JSON.parse(localStorage.getItem('arrayGuest'));
+        this.bulbs = JSON.parse(localStorage.getItem('bulbs'));
       } catch(e) {
-        localStorage.removeItem('arrayGuest');
-      }
-    };
-    if (localStorage.getItem('arrayBedroom')) {
-      try {
-        this.arrayBedroom = JSON.parse(localStorage.getItem('arrayBedroom'));
-      } catch(e) {
-        localStorage.removeItem('arrayBedroom');
+        localStorage.removeItem('bulbs');
       }
     }
   },
+  computed: {
+    hasRooms(){
+      return this.rooms.length > 0;
+    }
+  },
   methods: {
-    addNewBulb: function () {
-      if (this.selected === 'Кухня') {
-        this.arrayKitchen.push({
-          itemBulb: this.itemBulb,
-          id: this.nextIdKitchen++,
-          titleRoom: this.newRoom,
-          titlePosition: this.newPosition,
-          titleDate: this.newDate,
-          titleGaranty: this.newGaranty
-        }),
-        this.newRoom = '',
-        this.newPosition = '',
-        this.newDate = '',
-        this.newGaranty = '',
-        this.selected = '',
-        this.saveArrayKitchen();
-      } else if (this.selected === 'Зал'){
-        this.arrayGuest.push({
-          itemBulb: this.itemBulb,
-          id: this.nextIdGuest++,
-          titleRoom: this.newRoom,
-          titlePosition: this.newPosition,
-          titleDate: this.newDate,
-          titleGaranty: this.newGaranty
-        }),
-        this.newRoom = '',
-        this.newPosition = '',
-        this.newDate = '',
-        this.newGaranty = '',
-        this.saveArrayGuest();
-      } else if (this.selected === 'Спальня'){
-        this.arrayBedroom.push({
-          itemBulb: this.itemBulb,
-          id: this.nextIdBedroom++,
-          titleRoom: this.newRoom,
-          titlePosition: this.newPosition,
-          titleDate: this.newDate,
-          titleGaranty: this.newGaranty
-        }),
-        this.newRoom = '',
-        this.newPosition = '',
-        this.newDate = '',
-        this.newGaranty = '',
-        this.saveArrayBedroom();
-      }
+    addRoom(){
+      this.rooms.push({
+        id: this.nextIdRoom++,
+        label: this.newRoom
+      });
+      this.newRoom = '';
+      this.saveRooms();
     },
-    removeKitchen(x) {
-      this.arrayKitchen.splice(x, 1);
-      this.saveArrayKitchen();
+    addBulb(){
+
+      const selectedRoom = this.rooms.find((room) => {
+        return room.id === this.selected;
+      });
+
+      this.bulbs.push({
+        roomId: selectedRoom.id,
+        itemBulb: this.itemBulb,
+        id: this.nextIdBulb++,
+        titleRoom: selectedRoom.label,
+        titlePosition: this.newPosition,
+        titleDate: this.newDate,
+        titleGaranty: this.newGaranty
+      }),
+      this.newPosition = '',
+      this.newDate = '',
+      this.newGaranty = '',
+      this.selected = '',
+      this.saveBulbs();
     },
-    removeGuest(x) {
-      this.arrayGuest.splice(x, 1);
-      this.saveArrayGuest();
+    removeRoom(x) {
+      this.rooms.splice(x, 1);
+      this.saveRooms();
     },
-    removeBedroom(x) {
-      this.arrayBedroom.splice(x, 1);
-      this.saveArrayBedroom();
+    removeBulb(x) {
+      this.bulbs.splice(x, 1);
+      this.saveBulbs();
     },
-    saveArrayKitchen() {
-      const parsed = JSON.stringify(this.arrayKitchen);
-      localStorage.setItem('arrayKitchen', parsed);
+    saveRooms() {
+      const parsed = JSON.stringify(this.rooms);
+      localStorage.setItem('rooms', parsed);
     },
-    saveArrayGuest() {
-      const parsed = JSON.stringify(this.arrayGuest);
-      localStorage.setItem('arrayGuest', parsed);
-    },
-    saveArrayBedroom() {
-      const parsed = JSON.stringify(this.arrayBedroom);
-      localStorage.setItem('arrayBedroom', parsed);
+    saveBulbs() {
+      const parsed = JSON.stringify(this.bulbs);
+      localStorage.setItem('bulbs', parsed);
     }
 
   }
@@ -303,15 +209,11 @@ export default {
   width: 1140px;
   margin: auto;
 }
-.top{
-  display: flex;
-  justify-content: space-between;
-}
 .title {
   font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 50px;
   color: #35495e;
   letter-spacing: 1px;
 }
@@ -343,11 +245,7 @@ export default {
 .form-bulb{
   width: 330px;
 }
-.form-item{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
+
 h1, h2 {
   font-weight: normal;
 }
@@ -394,18 +292,7 @@ th:last-child{
   display: flex;
   justify-content: space-between;
 }
-.item-room{
-  position: relative;
-  width: 100px;
-  height: 150px;
-  border: 1px solid green;
-  margin: 10px
-}
-.item-room__title{
-  position: absolute;
-  bottom: -25px;
-  left: 0;
-}
+
 .item-bulb{
   display: inline-block;
   width: 12px;
